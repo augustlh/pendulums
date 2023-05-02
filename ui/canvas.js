@@ -85,6 +85,8 @@ class Canvas{
         }
         pop()
         
+        this.controls()
+        this.simulation()
 
         if(state == 'simple-pendulum'){
             this.simplePendulum()
@@ -98,10 +100,17 @@ class Canvas{
     }
 
     simulation(){
-
+        //this.controller.sceneDropDown.position(this.rects[0].x + 5, this.rects[0].y + 10)
+        push()
+        fill(255)
+        noStroke()
+        text("Status: " + world.pendulumState , this.rects[0].x + 5, this.rects[0].y + 50)
+        pop()
     }
 
     controls(){
+        this.controller.playbutton.position(this.rects[1].x + 5, this.rects[1].y + 10)
+        this.controller.resetButton.position(this.rects[1].x + 5, this.rects[1].y + 40)
     }
 
 

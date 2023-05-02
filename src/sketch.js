@@ -1,7 +1,6 @@
 let pendulum;
 //let doublePendulum;
 let world;
-let g = 9.82;
 
 let simView;
 let uiView;
@@ -15,6 +14,6 @@ function setup() {
 
 function draw() {
   background(255);
-  world.simulate(deltaTime * 0.0006)
+  world.simulate(deltaTime * world.PHYSICS.dt)
 }
 

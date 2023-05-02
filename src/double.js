@@ -17,6 +17,16 @@ class DoublePendulum{
       this.x2 = this.x1 + this.l2*100 * Math.sin(this.angle2);
       this.y2 = this.y1 + this.l2*100 * Math.cos(this.angle2);
 
+      this.initialAngle = this.angle;
+      this.initialOmega = this.omega;
+      this.initialL = this.l;
+      this.initialM = this.m;
+      this.initialAngle2 = this.angle2;
+      this.initialOmega2 = this.omega2;
+      this.initialL2 = this.l2;
+      this.initialM2 = this.m2;
+
+
       this.points = [];
     }
   
@@ -44,9 +54,9 @@ class DoublePendulum{
   
     acceleration(theta, phi, type){
       if(type == 0){
-        return (-g*(2 * this.m + this.m2)*Math.sin(theta) - this.m2*g*Math.sin(theta - 2 * phi) - 2*Math.sin(theta-phi)*this.m2*(this.omega2**2 * this.l2 + this.omega**2 * this.l * Math.cos(theta-phi))/(this.l*(2*this.m + this.m2 - this.m2*Math.cos(2*theta- 2*phi))));
+        return (-world.PHYSICS.g*(2 * this.m + this.m2)*Math.sin(theta) - this.m2*world.PHYSICS.g*Math.sin(theta - 2 * phi) - 2*Math.sin(theta-phi)*this.m2*(this.omega2**2 * this.l2 + this.omega**2 * this.l * Math.cos(theta-phi))/(this.l*(2*this.m + this.m2 - this.m2*Math.cos(2*theta- 2*phi))));
       }else if(type == 1){
-        return 2 * Math.sin(theta - phi)*(this.omega**2 * this.l * (this.m + this.m2) + g*(this.m + this.m2) * Math.cos(theta) + this.omega2**2 * this.l2 * this.m2 * Math.cos(theta - phi))/(this.l2*(2*this.m + this.m2 - this.m2*Math.cos(2*theta - 2*phi)));
+        return 2 * Math.sin(theta - phi)*(this.omega**2 * this.l * (this.m + this.m2) + world.PHYSICS.g*(this.m + this.m2) * Math.cos(theta) + this.omega2**2 * this.l2 * this.m2 * Math.cos(theta - phi))/(this.l2*(2*this.m + this.m2 - this.m2*Math.cos(2*theta - 2*phi)));
       }
     }
     
@@ -64,7 +74,7 @@ class DoublePendulum{
       let k4y = dt * (this.omega + k3v);
       let k4v = dt * this.acceleration(this.angle + k3y, this.angle2 + k3y,0);
     
-      this.angle += (k1y + 2*k2y + 2*k3y + k4y)/6;
+      this.angle += ((k1y + 2*k2y + 2*k3y + k4y)/6);
       this.omega += ((k1v + 2*k2v + 2*k3v + k4v)/6);
   
       let k1y2 = dt * this.omega2;
@@ -79,9 +89,25 @@ class DoublePendulum{
       let k4y2 = dt * (this.omega2 + k3v2);
       let k4v2 = dt * this.acceleration(this.angle + k3y2, this.angle2 + k3y2,1);
     
-      this.angle2 += (k1y2 + 2*k2y2 + 2*k3y2 + k4y2)/6;
-      this.omega2 += ((k1v2 + 2*k2v2 + 2*k3v2 + k4v2)/6);
+      this.angle2 += ((k1y2 + 2*k2y2 + 2*k3y2 + k4y2)/6)
+      this.omega2 += ((k1v2 + 2*k2v2 + 2*k3v2 + k4v2)/6)
       
+    }
+
+    reset(){
+      this.angle = this.initialAngle;
+      this.omega = this.initialOmega;
+      this.l = this.initialL;
+      this.m = this.initialM;
+      this.angle2 = this.initialAngle2;
+      this.omega2 = this.initialOmega2;
+      this.l2 = this.initialL2;
+      this.m2 = this.initialM2;
+      this.points = []
+    }
+
+    copy(){
+      return new DoublePendulum(this.m, this.l, this.r, this.angle, this.origin, this.m2, this.l2, this.r2, this.angle2)
     }
     
   }

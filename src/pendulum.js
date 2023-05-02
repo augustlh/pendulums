@@ -8,6 +8,11 @@ class SimplePendulum {
       this.omega = 0;
       this.I = this.m * this.l**2;
       this.dragging = false;
+
+      this.initialAngle = this.angle;
+      this.initialOmega = this.omega;
+      this.initialL = this.l;
+      this.initialM = this.m;
     }
   
     display(){
@@ -21,7 +26,7 @@ class SimplePendulum {
   
     acceleration(theta){
       this.I = this.m * this.l**2;
-      return -(this.m*g*this.l/this.I) * Math.sin(theta);
+      return -(this.m*world.PHYSICS.g*this.l/this.I) * Math.sin(theta) - (world.PHYSICS.h) * this.omega;
     }
   
     update(dt){
@@ -38,13 +43,25 @@ class SimplePendulum {
         let k4y = dt * (this.omega + k3v);
         let k4v = dt * this.acceleration(this.angle + k3y);
   
-        this.omega += ((k1v + 2*k2v + 2*k3v + k4v)/6) // 0.5;
-        this.angle += (k1y + 2*k2y + 2*k3y + k4y)/6;
+        this.omega += ((k1v + 2*k2v + 2*k3v + k4v)/6)
+        this.angle += (k1y + 2*k2y + 2*k3y + k4y)/6
       }
   
       else{
         this.drag();
       }
+    }
+
+    reset(){
+      this.angle = this.initialAngle;
+      this.omega = this.initialOmega;
+      this.l = this.initialL;
+      this.m = this.initialM;
+
+    }
+
+    copy(){
+      return new SimplePendulum(this.m, this.l, this.r, this.angle, this.origin);
     }
   
   }
