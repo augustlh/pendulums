@@ -43,13 +43,16 @@ class DoublePendulum{
       ellipse(x1, y1, 20, 20);
       ellipse(x2, y2, 20, 20);
 
-      this.points.push(createVector(this.angle,this.angle2))
+      /*this.points.push(createVector(this.angle,this.angle2))
 
       for(let i = 0; i < this.points.length; i++){
-        point(-this.points[i].x*200+width/2, this.points[i].y*200+width/2)
+        //point(-this.points[i].x*100 + width/1.5/2, this.points[i].y*30+height/2)
+        if(i > 0){
+          line(-this.points[i].x*100 + width/1.5/2, this.points[i].y*30+height/2, -this.points[i-1].x*100 + width/1.5/2, this.points[i-1].y*30+height/2)
+        }
       }
 
-
+      */
     }
   
     acceleration(theta, phi, type){

@@ -64,7 +64,7 @@ class Canvas{
             {x: this.pos.x + 10, y: 30, w: this.pos.x/3, h: 100, text: "Simulation", textPos: new Vector(this.pos.x + 10, 30 - 10)},
             {x: this.pos.x + 15 + this.pos.x/3, y: 30, w: width - this.pos.x - this.pos.x/3 - 25, h: 100, text: "Controls", textPos: new Vector(this.pos.x + this.pos.x/3 + 15, 30 - 10)},
             {x: this.pos.x + 10, y: 155, w: width - this.pos.x - 20, h: 250, text: "Constants", textPos: new Vector(this.pos.x + 10, 155 - 10)},
-            {x: this.pos.x + 10, y: 435, w: width - this.pos.x - 20, h: 100, text: "Viewer", textPos: new Vector(this.pos.x + 10, 435 - 10)}
+            {x: this.pos.x + 10, y: 435, w: width - this.pos.x - 20, h: 100, text: "Graph", textPos: new Vector(this.pos.x + 10, 435 - 10)}
           ];
         
         
