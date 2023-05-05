@@ -4,8 +4,6 @@ class Viewer{
     }
   
     display(state){
-
-
       if(state == 'simple-pendulum'){
         world.pendulums[0].display()
       } else if(state == 'double-pendulum'){

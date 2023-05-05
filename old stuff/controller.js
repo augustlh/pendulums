@@ -33,7 +33,7 @@ class Controller{
 
   
     updateModel(index, dt){ 
-      if(this.sceneDropdown.value() != world.stateMachine.getState()){ this.transition()}
+      //if(this.sceneDropdown.value() != world.stateMachine.getState()){ this.transition()}
       this.updateModelParameters()
 
 

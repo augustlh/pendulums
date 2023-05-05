@@ -1,6 +1,7 @@
 class StateMachine {
     constructor(state) {
       this.state = state;
+      this.states = ['simple-pendulum', 'double-pendulum', 'simple-pendulum-graph', 'double-pendulum-graph']
     }
   
     transition(event) {

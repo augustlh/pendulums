@@ -1,40 +1,36 @@
 //Modellen i MVC-pattern
 class World{
     constructor(pendulums, simView, uiView){
-      //instatiering af state machine, samt erkæring pendulums samt tildeling af værdi
       this.stateMachine = new StateMachine('simple-pendulum');
       this.pendulums = pendulums;
-
-      this.pendulumStates = {
-        idle: 0,
-        running: 1,
-        dragging: 2
-      }
-
-      this.PHYSICS = {
-        g: 9.82,
-        h: 0.01,
-        dt: 0.0008,
-      }
-
+      this.pendulumStates = {idle: 0,running: 1,dragging: 2}
+      this.PHYSICS = {g: 9.82, h: 0.01, dt: 0.0008}
       this.time = 0.0;
-  
       this.pendulumState = this.pendulumStates.idle;
-      //definerer viewer
       this.viewer = new Viewer()
-      //definerer controller
       this.controller = new Controller()
-      this.simView = simView;
-      this.uiView = uiView;
-
-      this.ui = new Ui(new Vector(this.uiView.x, 0), new Vector(this.uiView.y,height), [57,57,57], 'visible', 0, this.controller);
+      this.ui = new Ui(new Vector(uiView.x, 0), new Vector(uiView.y,height), this.controller);
   
     }
   
     simulate(dt){
-      this.controller.updateModel(this.pendulumState, dt)
+      this.controller.update(this.stateMachine.getState())
+      this.update(dt)
       this.viewer.display(this.stateMachine.getState())
-      //this.ui.draw(this.stateMachine.getState())
+    }
+
+    update(dt){
+      if(this.stateMachine.getState() == 'simple-pendulum' && this.pendulumState == this.pendulumStates.running || this.stateMachine.getState() == 'simple-pendulum-graph' && this.pendulumState == this.pendulumStates.running){
+        this.pendulums[0].update(dt)
+        this.time += dt;
+      } else if(this.stateMachine.getState() == 'double-pendulum' && this.pendulumState == this.pendulumStates.running|| this.stateMachine.getState() == 'double-pendulum-graph' && this.pendulumState == this.pendulumStates.running){
+        this.pendulums[1].update(dt)
+        this.time += dt;
+      } else if(this.stateMachine.getState() == 'simple-pendulum' && this.pendulumState == this.pendulumStates.dragging){
+        this.pendulums[0].drag()
+      } else if(this.stateMachine.getState() == 'double-pendulum' && this.pendulumState == this.pendulumStates.dragging){
+        this.pendulums[1].drag()
+      }
     }
 
   

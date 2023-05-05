@@ -1,165 +1,117 @@
-class Canvas{
-    constructor(pos, size, color, state, fill){
-      this.size = size; //størrelsen af canvas
-      this.pos = pos; //størrelsen af canvas
-      this.color = color; //farven på canvas
-      this.state = state; //hidden eller ikke hidden
-      this.fill = fill;
-      this.states = ['hidden', 'visible'];
-    }
-  
-    draw(){
-        if(this.state == 'visible'){
-            push()
-            if(this.fill == 0){
-                fill(this.color[0], this.color[1], this.color[2]);
-                noStroke();   
-            } else{
-                noFill();
-                stroke(this.color[0], this.color[1], this.color[2]);
-
-            }
-            rect(this.pos.x, this.pos.y, this.size.x, this.size.y);
-        }
-        pop()
-    }
-
-    setColor(color){
-        this.color = color;
-    }
-
-    setPos(pos){
-        this.pos = pos;
-    }
-
-    setSize(size){
-        this.size = size;
-    }
-
-    setState(state){
-        this.state = state;
-    }
-
-    getState(){
-        return this.state;
-    }
-
-    copy(){
-        return new Canvas(this.pos, this.size, this.color, this.state);
-    }
-  }
-
-  class Ui extends Canvas{
-    constructor(pos, size, color, state, fill, controller){
-        super(pos, size, color, state, fill);
-        this.state = state;
-        this.states =  ['hidden', 'visible'];
+class Ui{
+    constructor(pos, size, controller){
         this.controller = controller;
-        this.sliders = []
-        this.sliders = [this.controller.sliders[0],this.controller.sliders[2], this.controller.sliders[4], this.controller.sliders[5]]
-        
-        this.constantsText = ["Length", "Mass", "Gravity", "Damping"]
+        this.size = size; //størrelsen af UICanvas
+        this.pos = pos; //positionen af UICanvas
+        this.model = world;
+        this.sliders = this.controller.sliders;
+        this.SLIDER_VALUES = this.controller.SLIDER_VALUES;
 
-        this.rects = [
-            {x: this.pos.x + 10, y: 30, w: this.pos.x/3, h: 100, text: "Simulation", textPos: new Vector(this.pos.x + 10, 30 - 10)},
-            {x: this.pos.x + 15 + this.pos.x/3, y: 30, w: width - this.pos.x - this.pos.x/3 - 25, h: 100, text: "Controls", textPos: new Vector(this.pos.x + this.pos.x/3 + 15, 30 - 10)},
-            {x: this.pos.x + 10, y: 155, w: width - this.pos.x - 20, h: 250, text: "Constants", textPos: new Vector(this.pos.x + 10, 155 - 10)},
-            {x: this.pos.x + 10, y: 435, w: width - this.pos.x - 20, h: 100, text: "Graph", textPos: new Vector(this.pos.x + 10, 435 - 10)}
-          ];
-        
-        
+        this.hide()
+
+        //show all simple pendulum sliders
+        for(let i = 0; i < this.SLIDER_VALUES['simple-pendulum'].length; i++){ this.sliders[this.SLIDER_VALUES['simple-pendulum'][i]].show()}
+        this.sliders.gravity.show()
+        this.sliders.damping.show()
+        this.transition('simple-pendulum')
+
+        this.hText =[
+            {text:'Simulation', pos: new Vector(this.pos.x + 10, this.pos.y + 20)}, 
+            {text: 'Controls', pos: new Vector(this.pos.x + 10, this.pos.y + 120)}, 
+            {text: 'Constants', pos: new Vector(this.pos.x + 10, this.pos.y + 250)}
+        ]
+        this.btextS = ['Length', 'Mass', 'Gravity', 'Damping']
+        this.btextD = ['Length', 'Mass', 'Length 2', 'Mass 2', 'Gravity']
     }
 
     draw(state){
-        super.draw();
-        
         push()
-        noFill()
-        for(let i = 0; i < this.rects.length; i++){
-            noFill()
-            stroke(144)
-            rect(this.rects[i].x, this.rects[i].y, this.rects[i].w, this.rects[i].h)
-            fill(255)
-            noStroke()
-            text(this.rects[i].text, this.rects[i].textPos.x, this.rects[i].textPos.y)
-        }
+        noStroke()
+        fill(57,57,57);
+        rect(this.pos.x, this.pos.y, this.size.x, this.size.y);
         pop()
-        
-        this.controls()
-        this.simulation()
 
-        if(state == 'simple-pendulum'){
-            this.simplePendulum()
-        } else if(state == 'double-pendulum'){
-            this.doublePendulum()
-        } else if(state == 'simple-pendulum-graph'){
-            this.simplePendulumGraph()
-        } else if(state == 'double-pendulum-graph'){
-            this.doublePendulumGraph()
-        }
-    }
-
-    simulation(){
-        //this.controller.sceneDropDown.position(this.rects[0].x + 5, this.rects[0].y + 10)
         push()
         fill(255)
         noStroke()
-        text("Status: " + world.pendulumState , this.rects[0].x + 5, this.rects[0].y + 50)
+        text("Scene: ", this.hText[0].pos.x, this.hText[0].pos.y + 25)
+        text("Status: " + world.pendulumState, this.hText[0].pos.x, this.hText[1].pos.y - 40)
+
+        this.text(state)
+    }
+
+    transition(state){
+        this.hide()
+        if(state == 'simple-pendulum' || state == 'simple-pendulum-graph'){
+            for(let i = 0; i < this.SLIDER_VALUES[state].length; i++){
+                this.sliders[this.SLIDER_VALUES[state][i]].position(this.pos.x + 70, this.pos.y + 250 + 10 + i * 30)
+                this.sliders[this.SLIDER_VALUES[state][i]].show()
+            }
+            this.sliders.gravity.position(this.pos.x + 70, this.pos.y + 10 + 250 + this.SLIDER_VALUES[state].length * 30)
+            this.sliders.gravity.show()
+            this.sliders.damping.position(this.pos.x + 70, this.pos.y + 10 + 250 + (this.SLIDER_VALUES[state].length + 1) * 30)
+            this.sliders.damping.show()
+        } 
+        else if(state == 'double-pendulum' || state == 'double-pendulum-graph'){
+            for(let i = 0; i < this.SLIDER_VALUES[state].length; i++){
+                this.sliders[this.SLIDER_VALUES[state][i]].position(this.pos.x + 70, this.pos.y + 10 + 250 + i * 30)
+                this.sliders[this.SLIDER_VALUES[state][i]].show()
+            }
+            this.sliders.gravity.position(this.pos.x + 70, this.pos.y + 10  + 250+ this.SLIDER_VALUES[state].length * 30)
+            this.sliders.gravity.show()
+        }
+
+        this.sceneDropdown()
+    }
+
+    hide(){
+        for(let i = 0; i < Object.keys(this.sliders).length; i++){
+            this.sliders[Object.keys(this.sliders)[i]].hide()
+        }
+    }
+
+    sceneDropdown(){
+        this.controller.sceneDropdown.position(this.pos.x + 50, this.pos.y + 30)
+
+        this.controller.buttons.play.position(this.pos.x + 10, this.pos.y +  120 + 15)
+        this.controller.buttons.reset.position(this.pos.x + 10, this.pos.y + 120 + 45)
+    }
+
+    text(state){
+        //text for header
+        push()
+        fill(255)
+        noStroke()
+        textStyle(BOLD)
+        for(let i = 0; i < this.hText.length; i++){
+            text(this.hText[i].text, this.hText[i].pos.x, this.hText[i].pos.y)
+        }
+        pop()
+
+        push()
+        fill(255)
+        noStroke()
+        //text for body
+        if(state == 'simple-pendulum' || state == 'simple-pendulum-graph'){
+            for(let i = 0; i < this.btextS.length; i++){
+                text(this.btextS[i], this.pos.x + 10, this.pos.y + 280 + i * 30)
+                if(i < this.SLIDER_VALUES['simple-pendulum'].length){
+                    text( this.sliders[this.SLIDER_VALUES['simple-pendulum'][i]].value(), this.pos.x + 240, this.pos.y + 275 + i * 30)
+                }
+            } 
+            text(this.sliders.gravity.value(), this.pos.x + 240, this.pos.y + 275 + this.SLIDER_VALUES['simple-pendulum'].length * 30)
+            text(this.sliders.damping.value(), this.pos.x + 240, this.pos.y + 275 + (this.SLIDER_VALUES['simple-pendulum'].length + 1) * 30)
+        } else{ 
+            for(let i = 0; i < this.btextD.length; i++){
+                text(this.btextD[i], this.pos.x + 10, this.pos.y + 280 + i * 30)
+                //value of sliders
+                if(i < this.SLIDER_VALUES['double-pendulum'].length){
+                    text( this.sliders[this.SLIDER_VALUES['double-pendulum'][i]].value(), this.pos.x + 240, this.pos.y + 275 + i * 30)
+                }
+                text(this.sliders.gravity.value(), this.pos.x + 240, this.pos.y + 275 + this.SLIDER_VALUES['double-pendulum'].length * 30)
+            }
+        }
         pop()
     }
 
-    controls(){
-        this.controller.playbutton.position(this.rects[1].x + 5, this.rects[1].y + 10)
-        this.controller.resetButton.position(this.rects[1].x + 5, this.rects[1].y + 40)
-    }
-
-
-    simplePendulum(){        
-        for(let i = 0; i < this.sliders.length; i++){
-            this.sliders[i].position(this.pos.x + 70, this.rects[2].y + 10 + i * 30)
-            this.sliders[i].show()
-            push()
-            fill(255)
-            noStroke()
-            text(this.sliders[i].value(), this.pos.x + 235, this.rects[2].y + i * 30 + 25)
-            text(this.constantsText[i], this.pos.x + 20, this.rects[2].y + i * 30 + 25)    
-            pop()
-        }
-        
-    }
-
-    simplePendulumGrap(){
-
-    }
-
-    doublePendulum(){
-        for(let i = 0; i < this.sliders.length; i++){
-            this.sliders[i].position(this.pos.x + 70, this.rects[2].y + 10 + i * 30)
-            this.sliders[i].show()
-            push()
-            fill(255)
-            noStroke()
-            text(this.sliders[i].value(), this.pos.x + 235, this.rects[2].y + i * 30 + 25)
-            text(this.constantsText[i], this.pos.x + 20, this.rects[2].y + i * 30 + 25)
-            pop()
-        }
-    }
-
-    doublePendulumGraph(){
-    }
-
-    sliderChange(state){
-        for(let i = 0; i < this.sliders.length; i++){
-            this.sliders[i].hide()
-        }
-
-        if(state == 'simple-pendulum'){
-            this.sliders = [this.controller.sliders[0],this.controller.sliders[2], this.controller.sliders[4], this.controller.sliders[5]]
-            this.constantsText = ["Length", "Mass", "Gravity", "Damping"]
-        } else if(state == 'double-pendulum'){
-            this.sliders = [this.controller.sliders[0],this.controller.sliders[1], this.controller.sliders[2], this.controller.sliders[3], this.controller.sliders[4], this.controller.sliders[5]]
-            this.constantsText = ["Length 1", "Length 2", "Mass 1", "Mass 2", "Gravity", "Damping"]
-        }
-
-    }
-  }
+}

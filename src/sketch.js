@@ -15,6 +15,6 @@ function setup() {
 
 function draw() {
   background(255);
-  world.simulate(deltaTime * world.PHYSICS.dt)
+  world.simulate(deltaTime/1.2 * world.PHYSICS.dt)
 }
 
