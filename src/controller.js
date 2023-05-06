@@ -1,11 +1,19 @@
 class Controller{
     constructor(){
-        //this.sliders = {l: createSlider(0.1, 10, 1, 0.1), l2: createSlider(0.1, 10, 1, 0.1), m: createSlider(0.1, 10, 1, 0.1), m2: createSlider(0.1, 10, 1, 0.1), gravity: createSlider(0, 20, 9.82, 0.01), damping: createSlider(0, 0.99, 0, 0.01)};
-        this.sliders = {l: createSlider(0.1, 2, 1, 0.05), m: createSlider(0.1, 10, 1, 0.1), l2: createSlider(0.1, 2, 1, 0.05),  m2: createSlider(0.1, 10, 1, 0.1), gravity: createSlider(0, 20, 9.82, 0.01), damping: createSlider(0, 0.99, 0, 0.01)};
+        this.sliders = {
+            l: createSlider(0.1, 2, 1, 0.05), 
+            m: createSlider(0.1, 10, 1, 0.1), 
+            l2: createSlider(0.1, 2, 1, 0.05),  
+            m2: createSlider(0.1, 10, 1, 0.1), 
+            gravity: createSlider(0, 20, 9.82, 0.01), 
+            damping: createSlider(0, 0.995, 0, 0.005)
+        };
         this.initialValues = {l: 1, m: 1, l2: 1, m2: 1, gravity: 9.82, damping: 0};
         this.SLIDER_VALUES = {
             'simple-pendulum':  ['l' , 'm'],
-            'double-pendulum':  ['l', 'm', 'l2', 'm2']
+            'double-pendulum':  ['l', 'm', 'l2', 'm2'],
+            'simple-pendulum-graph': ['l', 'm'],
+            'double-pendulum-graph': ['l', 'm', 'l2', 'm2']
         }
 
         this.sceneDropdown = createSelect();
@@ -23,11 +31,13 @@ class Controller{
 
         this.buttons = {
             play: createButton('Play/Pause'),
-            reset: createButton('Reset')
+            reset: createButton('Reset'),
+            resetgraph: createButton('Reset Graph')
         }
 
         this.buttons.play.mousePressed(this.playButton);
         this.buttons.reset.mousePressed(this.resetButton);
+        this.buttons.resetgraph.mousePressed(this.resetGraphButton);
 
     }
 
@@ -68,6 +78,7 @@ class Controller{
         world.pendulums[1].reset()
         world.controller.reset(world.stateMachine.getState())
 
+
     }
 
     //ui elements that need to be updated when the scene changes
@@ -75,8 +86,9 @@ class Controller{
         if(this.sceneDropdown.value() != world.stateMachine.getState()){ 
             //state machine transition, reset alle sliders og ændre lokation af genstande i UI
             world.stateMachine.transition(this.sceneDropdown.value())
-            world.pendulumState = world.pendulumStates.idle;
+            world.pendulumState = world.pendulumStates.idle
 
+            //should only happen if you change between simple-pendulum and double-pendulum
             //dropdown logic reset
             this.sceneDropdown.remove()
             this.sceneDropdown = createSelect();
@@ -84,9 +96,11 @@ class Controller{
                 this.sceneDropdown.option(this.option[world.stateMachine.getState()][i])
             }
             this.sceneDropdown.value(this.option[world.stateMachine.getState()][0])
-
-            this.reset(world.stateMachine.getState())
             world.ui.transition(world.stateMachine.getState())
+
+            if(world.stateMachine.getState() == 'simple-pendulum' && state == 'double-pendulum' || world.stateMachine.getState() == 'double-pendulum' && state == 'simple-pendulum'){
+                this.reset(world.stateMachine.getState())
+            }
 
 
         }
@@ -97,6 +111,20 @@ class Controller{
             world.pendulumState = world.pendulumStates.running;
         } else if(world.pendulumState == world.pendulumStates.running){
             world.pendulumState = world.pendulumStates.idle;
+        }
+    }
+
+    resetGraphButton(){
+        world.pendulums[0].points = []
+        world.pendulums[1].points = []
+    }
+
+    mousePressed(){
+        if(world.stateMachine.getState() == 'simple-pendulum'){
+            world.pendulumState = world.pendulumStates.dragging;
+        } else if(world.stateMachine.getState() == 'double-pendulum'){
+            world.pendulumState = world.pendulumStates.dragging;
+            world.pendulums[1].clicked(mouseX, mouseY);
         }
     }
 

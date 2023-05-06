@@ -4,7 +4,7 @@ class World{
       this.stateMachine = new StateMachine('simple-pendulum');
       this.pendulums = pendulums;
       this.pendulumStates = {idle: 0,running: 1,dragging: 2}
-      this.PHYSICS = {g: 9.82, h: 0.01, dt: 0.0008}
+      this.PHYSICS = {g: 9.82, h: 0.01, dt: 0.00065}
       this.time = 0.0;
       this.pendulumState = this.pendulumStates.idle;
       this.viewer = new Viewer()

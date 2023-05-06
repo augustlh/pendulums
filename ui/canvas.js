@@ -75,6 +75,7 @@ class Ui{
 
         this.controller.buttons.play.position(this.pos.x + 10, this.pos.y +  120 + 15)
         this.controller.buttons.reset.position(this.pos.x + 10, this.pos.y + 120 + 45)
+        this.controller.buttons.resetgraph.position(this.pos.x + 10, this.pos.y + 120 + 75)
     }
 
     text(state){

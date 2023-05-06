@@ -9,12 +9,19 @@ class Viewer{
       } else if(state == 'double-pendulum'){
         world.pendulums[1].display()
       } else if(state == 'simple-pendulum-graph'){
-        print("world.pendulums[0].displayGraphs()")
+        world.pendulums[0].displayGraph()
       } else if(state == 'double-pendulum-graph'){
-        print("world.pendulums[1].displayGraphs()")
+        world.pendulums[1].displayGraph()
       }
 
+
       world.ui.draw(state)
+
+      push()
+      stroke(230)
+      line(0, height/2, simView.y, height/2)
+      line(simView.y/2, 0, simView.y/2, height)
+      pop()
 
       push()
       noStroke()
