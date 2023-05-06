@@ -20,8 +20,8 @@ class Ui{
             {text: 'Controls', pos: new Vector(this.pos.x + 10, this.pos.y + 120)}, 
             {text: 'Constants', pos: new Vector(this.pos.x + 10, this.pos.y + 250)}
         ]
-        this.btextS = ['Length', 'Mass', 'Gravity', 'Damping']
-        this.btextD = ['Length', 'Mass', 'Length 2', 'Mass 2', 'Gravity']
+        this.btextS = ['Length', 'Mass', 'Gravity', 'Damping', 'Timestep']
+        this.btextD = ['Length', 'Mass', 'Length 2', 'Mass 2', 'Gravity', 'Timestep']
     }
 
     draw(state){
@@ -44,21 +44,25 @@ class Ui{
         this.hide()
         if(state == 'simple-pendulum' || state == 'simple-pendulum-graph'){
             for(let i = 0; i < this.SLIDER_VALUES[state].length; i++){
-                this.sliders[this.SLIDER_VALUES[state][i]].position(this.pos.x + 70, this.pos.y + 250 + 10 + i * 30)
+                this.sliders[this.SLIDER_VALUES[state][i]].position(this.pos.x + 65, this.pos.y + 250 + 10 + i * 30)
                 this.sliders[this.SLIDER_VALUES[state][i]].show()
             }
-            this.sliders.gravity.position(this.pos.x + 70, this.pos.y + 10 + 250 + this.SLIDER_VALUES[state].length * 30)
+            this.sliders.gravity.position(this.pos.x + 65, this.pos.y + 10 + 250 + this.SLIDER_VALUES[state].length * 30)
             this.sliders.gravity.show()
-            this.sliders.damping.position(this.pos.x + 70, this.pos.y + 10 + 250 + (this.SLIDER_VALUES[state].length + 1) * 30)
+            this.sliders.damping.position(this.pos.x + 65, this.pos.y + 10 + 250 + (this.SLIDER_VALUES[state].length + 1) * 30)
             this.sliders.damping.show()
+            this.sliders.timestep.position(this.pos.x + 65, this.pos.y + 10 + 250 + (this.SLIDER_VALUES[state].length + 2) * 30)
+            this.sliders.timestep.show()
         } 
         else if(state == 'double-pendulum' || state == 'double-pendulum-graph'){
             for(let i = 0; i < this.SLIDER_VALUES[state].length; i++){
-                this.sliders[this.SLIDER_VALUES[state][i]].position(this.pos.x + 70, this.pos.y + 10 + 250 + i * 30)
+                this.sliders[this.SLIDER_VALUES[state][i]].position(this.pos.x + 65, this.pos.y + 10 + 250 + i * 30)
                 this.sliders[this.SLIDER_VALUES[state][i]].show()
             }
-            this.sliders.gravity.position(this.pos.x + 70, this.pos.y + 10  + 250+ this.SLIDER_VALUES[state].length * 30)
+            this.sliders.gravity.position(this.pos.x + 65, this.pos.y + 10  + 250+ this.SLIDER_VALUES[state].length * 30)
             this.sliders.gravity.show()
+            this.sliders.timestep.position(this.pos.x + 65, this.pos.y + 10 + 250 + (this.SLIDER_VALUES[state].length + 1) * 30)
+            this.sliders.timestep.show()
         }
 
         this.sceneDropdown()
@@ -97,19 +101,21 @@ class Ui{
             for(let i = 0; i < this.btextS.length; i++){
                 text(this.btextS[i], this.pos.x + 10, this.pos.y + 280 + i * 30)
                 if(i < this.SLIDER_VALUES['simple-pendulum'].length){
-                    text( this.sliders[this.SLIDER_VALUES['simple-pendulum'][i]].value(), this.pos.x + 240, this.pos.y + 275 + i * 30)
+                    text( this.sliders[this.SLIDER_VALUES['simple-pendulum'][i]].value(), this.pos.x + 230, this.pos.y + 275 + i * 30)
                 }
             } 
-            text(this.sliders.gravity.value(), this.pos.x + 240, this.pos.y + 275 + this.SLIDER_VALUES['simple-pendulum'].length * 30)
-            text(this.sliders.damping.value(), this.pos.x + 240, this.pos.y + 275 + (this.SLIDER_VALUES['simple-pendulum'].length + 1) * 30)
+            text(this.sliders.gravity.value(), this.pos.x + 230, this.pos.y + 275 + this.SLIDER_VALUES['simple-pendulum'].length * 30)
+            text(this.sliders.damping.value(), this.pos.x + 230, this.pos.y + 275 + (this.SLIDER_VALUES['simple-pendulum'].length + 1) * 30)
+            text(this.sliders.timestep.value(), this.pos.x + 230, this.pos.y + 275 + (this.SLIDER_VALUES['simple-pendulum'].length + 2) * 30)
         } else{ 
             for(let i = 0; i < this.btextD.length; i++){
                 text(this.btextD[i], this.pos.x + 10, this.pos.y + 280 + i * 30)
                 //value of sliders
                 if(i < this.SLIDER_VALUES['double-pendulum'].length){
-                    text( this.sliders[this.SLIDER_VALUES['double-pendulum'][i]].value(), this.pos.x + 240, this.pos.y + 275 + i * 30)
+                    text( this.sliders[this.SLIDER_VALUES['double-pendulum'][i]].value(), this.pos.x + 230, this.pos.y + 275 + i * 30)
                 }
-                text(this.sliders.gravity.value(), this.pos.x + 240, this.pos.y + 275 + this.SLIDER_VALUES['double-pendulum'].length * 30)
+                text(this.sliders.gravity.value(), this.pos.x + 230, this.pos.y + 275 + this.SLIDER_VALUES['double-pendulum'].length * 30)
+                text(this.sliders.timestep.value(), this.pos.x + 230, this.pos.y + 275 + (this.SLIDER_VALUES['double-pendulum'].length + 1) * 30)
             }
         }
         pop()

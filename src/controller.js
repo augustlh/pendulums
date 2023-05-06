@@ -6,9 +6,10 @@ class Controller{
             l2: createSlider(0.1, 2, 1, 0.05),  
             m2: createSlider(0.1, 10, 1, 0.1), 
             gravity: createSlider(0, 20, 9.82, 0.01), 
-            damping: createSlider(0, 0.995, 0, 0.005)
+            damping: createSlider(0, 0.995, 0, 0.005),
+            timestep: createSlider(0.0001, 0.01, 0.00065, 0.00001)
         };
-        this.initialValues = {l: 1, m: 1, l2: 1, m2: 1, gravity: 9.82, damping: 0};
+        this.initialValues = {l: 1, m: 1, l2: 1, m2: 1, gravity: 9.82, damping: 0, timestep: 0.00065};
         this.SLIDER_VALUES = {
             'simple-pendulum':  ['l' , 'm'],
             'double-pendulum':  ['l', 'm', 'l2', 'm2'],
@@ -56,6 +57,7 @@ class Controller{
             
             world.PHYSICS.g = this.sliders.gravity.value();
             world.PHYSICS.h = this.sliders.damping.value();
+            world.PHYSICS.dt = this.sliders.timestep.value();
         }
     }
 
@@ -69,6 +71,7 @@ class Controller{
 
         this.sliders['gravity'].value(this.initialValues.gravity);
         this.sliders['damping'].value(this.initialValues.damping);
+        this.sliders['timestep'].value(this.initialValues.timestep);
         world.time = 0.0;
     }
 
@@ -77,8 +80,6 @@ class Controller{
         world.pendulums[0].reset()
         world.pendulums[1].reset()
         world.controller.reset(world.stateMachine.getState())
-
-
     }
 
     //ui elements that need to be updated when the scene changes
