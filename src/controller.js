@@ -137,8 +137,10 @@ class Controller{
 
     //metode der håndterer musen når den bliver sluppet
     mouseReleased(){
-        world.pendulumState = world.pendulumStates.idle;
-        world.pendulums[1].dragging = 0;
+        if(world.pendulumState == world.pendulumStates.dragging){
+            world.pendulumState = world.pendulumStates.idle;
+            world.pendulums[1].dragging = 0;
+        }
     }
 
 }
