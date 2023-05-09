@@ -14,16 +14,18 @@ class Ui{
         this.sliders.gravity.show()
         this.sliders.damping.show()
         this.transition('simple-pendulum')
-
+        //eklæring af header text som objekter
         this.hText =[
             {text:'Simulation', pos: new Vector(this.pos.x + 10, this.pos.y + 20)}, 
             {text: 'Controls', pos: new Vector(this.pos.x + 10, this.pos.y + 120)}, 
             {text: 'Constants', pos: new Vector(this.pos.x + 10, this.pos.y + 250)}
         ]
+        //erklæring af body text som arrays
         this.btextS = ['Length', 'Mass', 'Gravity', 'Damping', 'Timestep']
         this.btextD = ['Length', 'Mass', 'Length 2', 'Mass 2', 'Gravity', 'Timestep']
     }
 
+    //metode til at tegne UICanvas
     draw(state){
         push()
         noStroke()
@@ -39,7 +41,7 @@ class Ui{
 
         this.text(state)
     }
-
+    //metode der ændrer positionen af ui-elementerne baseret på transition state
     transition(state){
         this.hide()
         if(state == 'simple-pendulum' || state == 'simple-pendulum-graph'){
@@ -67,13 +69,14 @@ class Ui{
 
         this.sceneDropdown()
     }
-
+    //metode der skjuler alle sliders
     hide(){
         for(let i = 0; i < Object.keys(this.sliders).length; i++){
             this.sliders[Object.keys(this.sliders)[i]].hide()
         }
     }
 
+    //sætter positionen af enkelte ui-elementer
     sceneDropdown(){
         this.controller.sceneDropdown.position(this.pos.x + 50, this.pos.y + 30)
 
@@ -82,6 +85,7 @@ class Ui{
         this.controller.buttons.resetgraph.position(this.pos.x + 10, this.pos.y + 120 + 75)
     }
 
+    //metode der tegner teksten i ui på baggrund af state
     text(state){
         //text for header
         push()

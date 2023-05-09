@@ -26,7 +26,6 @@ class Viewer{
       push()
       noStroke()
       fill(0)
-      text("FPS: " + frameRate().toFixed(2), 10, 20)
       text("Tid: " + world.time.toFixed(2) + " sekunder", 10, 40)
       pop()
 

@@ -12,13 +12,15 @@ class World{
       this.ui = new Ui(new Vector(uiView.x, 0), new Vector(uiView.y,height), this.controller);
   
     }
-  
+    
+    //metoden til at simulere 
     simulate(dt){
       this.controller.update(this.stateMachine.getState())
       this.update(dt)
       this.viewer.display(this.stateMachine.getState())
     }
 
+    //opdaterer modellen på baggrund af statemachinens state og pendulets state
     update(dt){
       if(this.stateMachine.getState() == 'simple-pendulum' && this.pendulumState == this.pendulumStates.running || this.stateMachine.getState() == 'simple-pendulum-graph' && this.pendulumState == this.pendulumStates.running){
         this.pendulums[0].update(dt)

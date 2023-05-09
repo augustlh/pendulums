@@ -159,11 +159,6 @@ class DoublePendulum{
         if(this.dragging == 2){ this.angle2 = Math.atan2(mouseX - this.x1, mouseY - this.y1); } 
         else if(this.dragging == 1){
           this.angle = Math.atan2(mouseX - this.origin.x, mouseY - this.origin.y); 
-          //update the position of the second pendulum
-          // this.x1 = this.l*100 * Math.sin(this.angle) + this.origin.x;
-          // this.y1 = this.l*100 * Math.cos(this.angle) + this.origin.y;
-          // this.x2 = this.x1 + this.l2*100 * Math.sin(this.angle2);
-          // this.y2 = this.y1 + this.l2*100 * Math.cos(this.angle2);
         }
       }
     }

@@ -42,7 +42,9 @@ class Controller{
 
     }
 
+    //opdaterer modellen ud fra sliderne
     update(state){
+        //kalder metoden transition
         this.transition(state)
         let index = 1;
         if(state == 'simple-pendulum' || state == 'simple-pendulum-graph'){
@@ -61,7 +63,7 @@ class Controller{
         }
     }
 
-
+    //resetter sliderne til deres startværdier
     reset(state){
         let name;
         for(let i = 0; i < this.SLIDER_VALUES[state].length; i++){
@@ -75,6 +77,7 @@ class Controller{
         world.time = 0.0;
     }
 
+    //metoden til at håndtere reset knappen
     resetButton(){
         world.pendulumState = world.pendulumStates.idle;
         world.pendulums[0].reset()
@@ -82,14 +85,14 @@ class Controller{
         world.controller.reset(world.stateMachine.getState())
     }
 
-    //ui elements that need to be updated when the scene changes
+    //ui transition
     transition(state){
+        //tjekker om værdien af scenedropdown ikke er den samme som state-machinen
         if(this.sceneDropdown.value() != world.stateMachine.getState()){ 
             //state machine transition, reset alle sliders og ændre lokation af genstande i UI
             world.stateMachine.transition(this.sceneDropdown.value())
             world.pendulumState = world.pendulumStates.idle
 
-            //should only happen if you change between simple-pendulum and double-pendulum
             //dropdown logic reset
             this.sceneDropdown.remove()
             this.sceneDropdown = createSelect();
@@ -102,11 +105,10 @@ class Controller{
             if(world.stateMachine.getState() == 'simple-pendulum' && state == 'double-pendulum' || world.stateMachine.getState() == 'double-pendulum' && state == 'simple-pendulum'){
                 this.reset(world.stateMachine.getState())
             }
-
-
         }
     }
 
+    //metoden til at håndtere play/pause knappen
     playButton(){
         if(world.pendulumState == world.pendulumStates.idle || world.pendulumState == world.pendulumStates.dragging){
             world.pendulumState = world.pendulumStates.running;
@@ -115,18 +117,28 @@ class Controller{
         }
     }
 
+    //metoden til at håndtere reset graph knappen
     resetGraphButton(){
         world.pendulums[0].points = []
         world.pendulums[1].points = []
     }
 
+    //metode der håndterer musetryk
     mousePressed(){
         if(world.stateMachine.getState() == 'simple-pendulum'){
+            //pendulet sættes i draggin state
             world.pendulumState = world.pendulumStates.dragging;
         } else if(world.stateMachine.getState() == 'double-pendulum'){
+            //pendulet sættes i dragging state og metoden clicker kaldes
             world.pendulumState = world.pendulumStates.dragging;
             world.pendulums[1].clicked(mouseX, mouseY);
         }
+    }
+
+    //metode der håndterer musen når den bliver sluppet
+    mouseReleased(){
+        world.pendulumState = world.pendulumStates.idle;
+        world.pendulums[1].dragging = 0;
     }
 
 }
