@@ -4,7 +4,11 @@ class StateMachine {
       this.states = ['simple-pendulum', 'double-pendulum', 'simple-pendulum-graph', 'double-pendulum-graph']
     }
     
-    //metode som opdaterer this.state ud fra en event
+    /**
+     * @description Method that changes the state of the state machine based on the event parameter
+     * @param {String} event 
+     * @returns {void}
+     */
     transition(event) {
       switch (this.state) {
         case 'simple-pendulum':
@@ -34,7 +38,10 @@ class StateMachine {
       }
     }
     
-    //metode som returnerer this.state
+    /**
+     * @description Method that returns the state of the state machine
+     * @returns {String} state
+     */
     getState(){
       return this.state;
     }

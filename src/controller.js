@@ -42,7 +42,11 @@ class Controller{
 
     }
 
-    //opdaterer modellen ud fra sliderne
+    /**
+     * @description Method that updates the model (world) based on the sliders
+     * @param {String} state 
+     * @returns {void}
+     */
     update(state){
         //kalder metoden transition
         this.transition(state)
@@ -63,14 +67,17 @@ class Controller{
         }
     }
 
-    //resetter sliderne til deres startværdier
+    /**
+     * @description Method that resets the sliders to their initial values and resets the time
+     * @param {String} state 
+     * @returns {void}
+     */
     reset(state){
         let name;
         for(let i = 0; i < this.SLIDER_VALUES[state].length; i++){
             name = Object.keys(this.sliders)[i];
             this.sliders[name].value(this.initialValues[name]);
         }
-
         this.sliders['gravity'].value(this.initialValues.gravity);
         this.sliders['damping'].value(this.initialValues.damping);
         this.sliders['timestep'].value(this.initialValues.timestep);
@@ -78,6 +85,10 @@ class Controller{
     }
 
     //metoden til at håndtere reset knappen
+    /**
+     * @description Method that resets the model (world) and the sliders when the reset button is pressed
+     * @returns {void}
+     */
     resetButton(){
         world.pendulumState = world.pendulumStates.idle;
         world.pendulums[0].reset()
@@ -85,14 +96,17 @@ class Controller{
         world.controller.reset(world.stateMachine.getState())
     }
 
-    //ui transition
+    /**
+     * @description Method that checks if state-machine needs to transition and transitions it if needed
+     * @param {String} state 
+     * @returns {void}
+     */
     transition(state){
-        //tjekker om værdien af scenedropdown ikke er den samme som state-machinen
+        //tjekker om værdien af scenedropdown ikke er den samme som state-machinen 
         if(this.sceneDropdown.value() != world.stateMachine.getState()){ 
             //state machine transition, reset alle sliders og ændre lokation af genstande i UI
             world.stateMachine.transition(this.sceneDropdown.value())
-            world.pendulumState = world.pendulumStates.idle
-
+            world.pendulumState = world.pendulumStates.idle;
             //dropdown logic reset
             this.sceneDropdown.remove()
             this.sceneDropdown = createSelect();
@@ -108,7 +122,10 @@ class Controller{
         }
     }
 
-    //metoden til at håndtere play/pause knappen
+    /**
+     * @description Method that changes the state of the pendulum (world) when the play/pause button is pressed
+     * @returns {void}
+     */
     playButton(){
         if(world.pendulumState == world.pendulumStates.idle || world.pendulumState == world.pendulumStates.dragging){
             world.pendulumState = world.pendulumStates.running;
@@ -117,13 +134,20 @@ class Controller{
         }
     }
 
-    //metoden til at håndtere reset graph knappen
+    /**
+     * @description Method that resets the graph of the pendulum (world) when the reset graph button is pressed
+     * @returns {void}
+     */
     resetGraphButton(){
         world.pendulums[0].points = []
         world.pendulums[1].points = []
     }
 
     //metode der håndterer musetryk
+    /**
+     * @description Method that handles the mouseDown event
+     * @returns {void}
+     */
     mousePressed(){
         if(world.stateMachine.getState() == 'simple-pendulum'){
             //pendulet sættes i draggin state
@@ -136,6 +160,10 @@ class Controller{
     }
 
     //metode der håndterer musen når den bliver sluppet
+    /**
+     * @description Method that handles when the mouse is released
+     * @returns {void}
+     */
     mouseReleased(){
         if(world.pendulumState == world.pendulumStates.dragging){
             world.pendulumState = world.pendulumStates.idle;

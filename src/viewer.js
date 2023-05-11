@@ -1,8 +1,18 @@
 //Vieweren i MVC-pattern
+/**
+ * Class that displays the model based on its state. 
+ * @class Viewer
+ * @see World 
+ */
 class Viewer{
     constructor(){
     }
-  
+    
+    /**
+     * @description Method that displays the model (world) based on its state
+     * @param {String} state 
+     * @returns {void}
+     */
     display(state){
       if(state == 'simple-pendulum'){
         world.pendulums[0].display()
