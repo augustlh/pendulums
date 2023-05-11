@@ -13,14 +13,21 @@ class World{
   
     }
     
-    //metoden til at simulere 
+    /**
+     * @description Method that simulates the model (world)
+     * @param {Number} dt 
+     * @returns {void}
+     */
     simulate(dt){
       this.controller.update(this.stateMachine.getState())
       this.update(dt)
       this.viewer.display(this.stateMachine.getState())
     }
 
-    //opdaterer modellen på baggrund af statemachinens state og pendulets state
+    /**
+     * @description Method that updates the pendulum part of the model (world)
+     * @param {Number} dt 
+     */
     update(dt){
       if(this.stateMachine.getState() == 'simple-pendulum' && this.pendulumState == this.pendulumStates.running || this.stateMachine.getState() == 'simple-pendulum-graph' && this.pendulumState == this.pendulumStates.running){
         this.pendulums[0].update(dt)

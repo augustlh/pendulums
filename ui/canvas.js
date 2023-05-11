@@ -14,18 +14,23 @@ class Ui{
         this.sliders.gravity.show()
         this.sliders.damping.show()
         this.transition('simple-pendulum')
-        //eklæring af header text som objekter
+
+        //declaration of header text as an array of objects with text and position
         this.hText =[
             {text:'Simulation', pos: new Vector(this.pos.x + 10, this.pos.y + 20)}, 
             {text: 'Controls', pos: new Vector(this.pos.x + 10, this.pos.y + 120)}, 
             {text: 'Constants', pos: new Vector(this.pos.x + 10, this.pos.y + 250)}
         ]
-        //erklæring af body text som arrays
+        //declaration of body text as an array of strings
         this.btextS = ['Length', 'Mass', 'Gravity', 'Damping', 'Timestep']
         this.btextD = ['Length', 'Mass', 'Length 2', 'Mass 2', 'Gravity', 'Timestep']
     }
 
-    //metode til at tegne UICanvas
+    /**
+     * @description Method that draws the UI based on the state of the models stateMachine
+     * @param {String} state 
+     * @returns {void}
+     */
     draw(state){
         push()
         noStroke()
@@ -41,9 +46,14 @@ class Ui{
 
         this.text(state)
     }
-    //metode der ændrer positionen af ui-elementerne baseret på transition state
+    /**
+     * @description Method that changes the position of the UI elements based on the state parameter
+     * @param {String} state 
+     * @returns {void}
+     */
     transition(state){
         this.hide()
+        //sets the position of the sliders and shows them based on state
         if(state == 'simple-pendulum' || state == 'simple-pendulum-graph'){
             for(let i = 0; i < this.SLIDER_VALUES[state].length; i++){
                 this.sliders[this.SLIDER_VALUES[state][i]].position(this.pos.x + 65, this.pos.y + 250 + 10 + i * 30)
@@ -69,7 +79,10 @@ class Ui{
 
         this.sceneDropdown()
     }
-    //metode der skjuler alle sliders
+    /**
+     * @description Method that hides all UI elements
+     * @returns {void}
+     */
     hide(){
         for(let i = 0; i < Object.keys(this.sliders).length; i++){
             this.sliders[Object.keys(this.sliders)[i]].hide()
@@ -85,7 +98,10 @@ class Ui{
         this.controller.buttons.resetgraph.position(this.pos.x + 10, this.pos.y + 120 + 75)
     }
 
-    //metode der tegner teksten i ui på baggrund af state
+    /**
+     * @description Method that draws UI-text based on the state parameter
+     * @param {String} state 
+     */
     text(state){
         //text for header
         push()

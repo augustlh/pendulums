@@ -1,3 +1,6 @@
+/**
+ * @description Pendulum class
+ */
 class Pendulum {
     constructor(m, l, r, angle, pos){
         this.m = m; this.l = l; this.r = r; this.pos = pos; this.angle = angle; this.omega = 0;
@@ -5,15 +8,23 @@ class Pendulum {
         this.points = [];
     }
     
-    //Beregner vinkelaccelerationen for pendulet ved en given vinkel theta. Ligningen er fået fra ORBIT B - HTX
+    /**
+     * @description Calculates the angular acceleration of the pendulum at a given angle theta. The equation is from ORBIT B - HTX
+     * @param {Number} theta 
+     * @returns {Number} Angular acceleration of the pendulum
+     */
     acceleration(theta){
         let I = this.m * this.l**2;
         return -(this.m*world.PHYSICS.g*this.l/I) * Math.sin(theta) - (world.PHYSICS.h) * this.omega;
       }
-
+    
+      /**
+       * @description Solves the differential equations for the pendulums motion using the RK4 method. The equations are fron @see https://www.myphysicslab.com/pendulum/pendulum-en.html, but implemented on my own.
+       * @param {Number} dt 
+       * @returns {void}
+       */
     update(dt){
         this.graph()
-        //Løser bevægelsesligninger med RK4. Ligninger er fået fra: https://www.myphysicslab.com/pendulum/pendulum-en.html, men implementeret på egen hånd.
         let k1y = dt * this.omega;
         let k1v = dt * this.acceleration(this.angle);
   
@@ -30,6 +41,10 @@ class Pendulum {
         this.angle += (k1y + 2*k2y + 2*k3y + k4y)/6
     }
 
+    /**
+     * @description Displays the pendulum
+     * @returns {void}
+     */
     display(){
         //Tegner pendulet
         this.x = this.l*100 * Math.sin(this.angle) + this.pos.x;
@@ -41,11 +56,18 @@ class Pendulum {
         ellipse(this.x, this.y, this.r*20, this.r*20);
     }
 
-    //Pusher punkterne til grafen i arrayet points
+    /**
+     * @description Pushes a Vector of the angle wrapped between -PI and PI and the angular velocity to the points array
+     * @returns {void}
+     */
     graph(){
         this.points.push(new Vector(this.limitPI(this.angle),this.omega))
     }
 
+    /**
+     * @description Displays the graph of the pendulum
+     * @returns {void}
+     */
     displayGraph(){
         //Axis labels
         push(); noStroke(); fill(0)
@@ -74,7 +96,11 @@ class Pendulum {
 
     }
 
-    //Begrænser vinklen til at være mellem -pi og pi
+    /**
+     * @description Wraps a given angle to PI
+     * @param {Number} angle 
+     * @returns {Number} Returns the angle wrapped between -PI and PI
+     */
     limitPI(angle) {
         while (angle < -Math.PI) {
           angle += 2*Math.PI;
@@ -85,7 +111,10 @@ class Pendulum {
         return angle;
       }
 
-    //Resetter pendulet til dens startværdier
+    /**
+     * @description Resets the pendulum to its initial values
+     * @returns {void}
+     */
     reset(){
         this.angle = this.initialAngle;
         this.omega = 0;
@@ -93,6 +122,11 @@ class Pendulum {
         this.m = this.initialM;
     }
 
+
+    /**
+     * @description Drags the pendulum according to the mouse position
+     * @returns {void}
+     */
     drag(){
         //Hvis modellens pendulumState er dragging, så skal pendulets vinkel være lig med vinklen mellem musen og pendulets pos
         if(world.pendulumState == world.pendulumStates.dragging){
@@ -100,13 +134,21 @@ class Pendulum {
         }
     }
 
-    //Returnerer en kopi af pendulet
+    /**
+    * @description Returns a copy of the double pendulum
+    * @returns {DoublePendulum} Returns a copy of the double pendulum
+    */
     copy(){
         return new Pendulum(this.m, this.l, this.r, this.angle, this.pos);
     }
 
 
 }
+
+/**
+ * @description DoublePendulumS is a class that represents a double pendulum. It is a child of Pendulum.
+ * @extends Pendulum
+ */
 
 class DoublePendulumS extends Pendulum{
     constructor(m, l, r, angle, pos, m2, l2, r2, angle2){
@@ -124,7 +166,13 @@ class DoublePendulumS extends Pendulum{
         this.initialM2 = this.m2; this.initialL2 = this.l2; this.initialAngle2 = this.angle2;
     }
 
-    //Beregner vinkelaccelerationen for pendulet ved en given vinkel theta. Ligningerne er fået fra ORBIT B - HTX
+    /**
+     * @description Calculates the angular acceleration of a pendulum. The equations are from ORBIT B - HTX
+     * @param {Number} theta
+     * @param {Number} phi
+     * @param {Integer} type
+     * @returns {Number} Angular acceleration of the pendulum based on its type parameter
+     */
     acceleration(theta, phi, type){
         if(type == 0){
           return (-world.PHYSICS.g*(2 * this.m + this.m2)*Math.sin(theta) - this.m2*world.PHYSICS.g*Math.sin(theta - 2 * phi) - 2*Math.sin(theta-phi)*this.m2*(this.omega2**2 * this.l2 + this.omega**2 * this.l * Math.cos(theta-phi))/(this.l*(2*this.m + this.m2 - this.m2*Math.cos(2*theta- 2*phi))));
@@ -134,6 +182,11 @@ class DoublePendulumS extends Pendulum{
     }
 
     //opdaterer pendulet med RK4 metoden
+    /**
+     * @description Updates the pendulums position by solving the differential equations with the RK4 method
+     * @param {Float} dt 
+     * @returns {void}
+     */
     update(dt){
         this.graph()
         let k1y = dt * this.omega;
@@ -167,7 +220,10 @@ class DoublePendulumS extends Pendulum{
         this.omega2 += ((k1v2 + 2*k2v2 + 2*k3v2 + k4v2)/6)
     }
 
-    //Tegner pendulet
+    /**
+     * @description Draws the double pendulum
+     * @returns {void}
+     */
     display(){
         super.display();
         this.x2 = this.x + this.l2*100 * Math.sin(this.angle2);
@@ -176,7 +232,10 @@ class DoublePendulumS extends Pendulum{
         circle(this.x2, this.y2, this.r2*20);
     }
 
-    //Reset pendulet til dens startværdier
+    /**
+     * @description Resets the double pendulum to its initial values
+     * @returns {void}
+     */
     reset(){
         super.reset();
         this.angle2 = this.initialAngle2;
@@ -185,12 +244,17 @@ class DoublePendulumS extends Pendulum{
         this.m2 = this.initialM2;
     }
 
-    //Pusher punkterne til grafen i arrayet points
+    /**
+     * @description Pushes the points to the graph
+     * @returns {void}
+     */
     graph(){
         this.points.push(new Vector(super.limitPI(this.angle),super.limitPI(this.angle2)))
     }
-
-    //Tegner grafen
+    /**
+     * @description Draws the graph of the double pendulum based on the points in the array<points>
+     * @returns {void}
+    */
     displayGraph(){
         //Axis labels
         push(); noStroke(); fill(0)
@@ -217,6 +281,12 @@ class DoublePendulumS extends Pendulum{
 
     }
 
+    /**
+     * @description Checks what pendulum is clicked
+     * @param {*} x 
+     * @param {*} y 
+     * @returns {void}
+     */
     clicked(x, y){
       this.x1 = this.l*100 * Math.sin(this.angle) + this.pos.x;
       this.y1 = this.l*100 * Math.cos(this.angle) + this.pos.y;
@@ -226,6 +296,10 @@ class DoublePendulumS extends Pendulum{
       else{ this.dragging = 1; this.omega = 0; this.omega2 = 0;}
     }
 
+    /**
+     * @description Drags the affected pendulum based on the mouse position
+     * @returns {void}
+    */
     drag(){
         if(world.pendulumState == world.pendulumStates.dragging){
           if(this.dragging == 2){ this.angle2 = Math.atan2(mouseX - this.x1, mouseY - this.y1); } 
@@ -235,7 +309,10 @@ class DoublePendulumS extends Pendulum{
         }
       }
 
-        
+      /**
+      * @description Returns a copy of the double pendulum
+      * @returns {DoublePendulum} Returns a copy of the double pendulum
+      */
       copy(){
         return new DoublePendulum(this.m, this.l, this.r, this.angle, this.pos, this.m2, this.l2, this.r2, this.angle2)
       }
