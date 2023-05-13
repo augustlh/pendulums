@@ -13,37 +13,41 @@ class Vector{
       /**
        * @description Method that adds a vector to this vector
        * @param {Vector} v The vector to add
-       * @returns {Vector} A new vector that is the sum of this and v
+       * @returns {Void}
        */
       add(v){
-        return new Vector(this.x + v.x, this.y + v.y);
+        this.x += v.x;
+        this.y += v.y;
       }
       
       /**
        * @description Method that subtracts a vector from this vector
        * @param {Vector} v The vector to subtract 
-       * @returns {Vector} A new vector that is the difference of this and v
+       * @returns {Void}
        */
       subtract(v){
-        return new Vector(this.x - v.x, this.y - v.y);
+        this.x -= v.x;
+        this.y -= v.y;
       }
 
       /**
        * @description Method that multiplies this vector with a scalar
        * @param {Number} s The scalar to multiply with 
-       * @returns {Vector} A new vector that is the product of this and s
+       * @returns {Void}
        */
       mult(s){
-        return new Vector(this.x * s, this.y * s);
+        this.x *= s;
+        this.y *= s;
       }
       
       /**
        * @description Method that divides this vector with a scalar
        * @param {Number} s The scalar to divide with
-       * @returns {Vector} A new vector that is the quotient of this and s
+       * @returns {Void}
        */
       divide(s){
-        return new Vector(this.x / s, this.y / s);
+        this.x /= s;
+        this.y /= s;
       }
       
       /**
@@ -56,7 +60,7 @@ class Vector{
       
       /**
        * @description Method that returns the normalized version of this vector
-       * @returns {Vector} A new vector that is the normalized version of this vector
+       * @returns {Number} The normalized version of this vector
        * @see Vector#mag
        * @see Vector#divide
        */

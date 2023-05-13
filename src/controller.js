@@ -54,6 +54,7 @@ class Controller{
         if(state == 'simple-pendulum' || state == 'simple-pendulum-graph'){
             index = 0;
         }
+        //opdaterer værdierne i pendulet baseret på værdierne i sliders
         if(this.SLIDER_VALUES[state]){
             let name;
             for(let i = 0; i < Object.keys(this.sliders).length; i++){
@@ -106,13 +107,15 @@ class Controller{
         if(this.sceneDropdown.value() != world.stateMachine.getState()){ 
             //state machine transition, reset alle sliders og ændre lokation af genstande i UI
             world.stateMachine.transition(this.sceneDropdown.value())
-            world.pendulumState = world.pendulumStates.idle;
+            
             //dropdown logic reset
+            //fjerner alle options fra dropdown og sætter dem til de rigtige på baggrund af state
             this.sceneDropdown.remove()
             this.sceneDropdown = createSelect();
             for(let i = 0; i < this.option[world.stateMachine.getState()].length; i++){
                 this.sceneDropdown.option(this.option[world.stateMachine.getState()][i])
             }
+            world.pendulumState = world.pendulumStates.idle;
             this.sceneDropdown.value(this.option[world.stateMachine.getState()][0])
             world.ui.transition(world.stateMachine.getState())
 
@@ -143,7 +146,6 @@ class Controller{
         world.pendulums[1].points = []
     }
 
-    //metode der håndterer musetryk
     /**
      * @description Method that handles the mouseDown event
      * @returns {void}
@@ -159,7 +161,6 @@ class Controller{
         }
     }
 
-    //metode der håndterer musen når den bliver sluppet
     /**
      * @description Method that handles when the mouse is released
      * @returns {void}

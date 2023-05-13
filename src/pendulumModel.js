@@ -61,8 +61,16 @@ class Pendulum {
      * @returns {void}
      */
     graph(){
-        this.points.push(new Vector(this.limitPI(this.angle),this.omega))
-    }
+        //this.points.push(new Vector(this.limitPi(this.angle),this.omega))
+        if(this.points.length > 3000){
+          console.log("Resetting graph")
+          this.points = []
+        }
+        let point = new Vector(this.limitPi(this.angle),this.omega)
+        if(!contains(point, this.points)){
+            this.points.push(point)
+        }
+      }
 
     /**
      * @description Displays the graph of the pendulum
@@ -101,7 +109,7 @@ class Pendulum {
      * @param {Number} angle 
      * @returns {Number} Returns the angle wrapped between -PI and PI
      */
-    limitPI(angle) {
+    limitPi(angle) {
         while (angle < -Math.PI) {
           angle += 2*Math.PI;
         }
@@ -135,8 +143,8 @@ class Pendulum {
     }
 
     /**
-    * @description Returns a copy of the double pendulum
-    * @returns {DoublePendulum} Returns a copy of the double pendulum
+    * @description Returns a copy of the pendulum
+    * @returns {Pendulum} Returns a copy of the pendulum
     */
     copy(){
         return new Pendulum(this.m, this.l, this.r, this.angle, this.pos);
@@ -150,15 +158,15 @@ class Pendulum {
  * @extends Pendulum
  */
 
-class DoublePendulumS extends Pendulum{
+class DoublePendulum extends Pendulum{
     constructor(m, l, r, angle, pos, m2, l2, r2, angle2){
         super(m, l, r, angle, pos);
-        this.omega = 0;
+        this.omega = 0.0;
         this.m2 = m2;
         this.l2 = l2;
         this.r2 = r2;
         this.angle2 = angle2;
-        this.omega2 = 0;
+        this.omega2 = 0.0;
 
         this.dragging = 0;
 
@@ -249,7 +257,14 @@ class DoublePendulumS extends Pendulum{
      * @returns {void}
      */
     graph(){
-        this.points.push(new Vector(super.limitPI(this.angle),super.limitPI(this.angle2)))
+        if(this.points.length > 3000){
+          console.log("Resetting graph")
+          this.points = []
+        }
+        let point = new Vector(this.limitPi(this.angle),this.limitPi(this.angle2))
+        if(!contains(point, this.points)){
+            this.points.push(point)
+        }
     }
     /**
      * @description Draws the graph of the double pendulum based on the points in the array<points>
@@ -283,8 +298,8 @@ class DoublePendulumS extends Pendulum{
 
     /**
      * @description Checks what pendulum is clicked
-     * @param {*} x 
-     * @param {*} y 
+     * @param {Number} x 
+     * @param {Number} y 
      * @returns {void}
      */
     clicked(x, y){
